@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	api "github.com/begonia-org/go-access-control/api/v1"
-	"github.com/begonia-org/go-access-control/biz"
+	api "github.com/begonia-org/go-iam/api/v1"
+	"github.com/begonia-org/go-iam/biz"
 	"github.com/gobwas/glob"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spark-lence/tiga"

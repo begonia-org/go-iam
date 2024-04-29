@@ -3,7 +3,7 @@ package biz
 import (
 	"context"
 
-	api "github.com/begonia-org/go-access-control/api/v1"
+	api "github.com/begonia-org/go-iam/api/v1"
 )
 type PolicyRepo interface {
 	Insert(ctx context.Context, policy *api.Policy) (string,error)

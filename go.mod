@@ -1,4 +1,4 @@
-module github.com/begonia-org/go-access-control
+module github.com/begonia-org/go-iam
 
 go 1.20
 

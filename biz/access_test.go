@@ -6,7 +6,7 @@ import (
     "time"
 
     "github.com/agiledragon/gomonkey/v2"
-    api "github.com/begonia-org/go-access-control/api/v1"
+    api "github.com/begonia-org/go-iam/api/v1"
     "github.com/gobwas/glob"
     c "github.com/smartystreets/goconvey/convey"
 )

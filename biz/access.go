@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	api "github.com/begonia-org/go-access-control/api/v1"
+	api "github.com/begonia-org/go-iam/api/v1"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/exp/slices"
 )
