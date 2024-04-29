@@ -6,35 +6,40 @@ import (
 	api "github.com/begonia-org/go-access-control/api/v1"
 )
 type PolicyRepo interface {
-	Insert(ctx context.Context, policy *api.Policy) error
+	Insert(ctx context.Context, policy *api.Policy) (string,error)
+	Select(ctx context.Context, principal string, action string) ([]*api.Policy, error)
+	MatchResource(resourceRegx, target string) bool
 }
 
-type PolicyUsecase struct {
+type policyUsecase struct {
 	repo PolicyRepo
 }
 
-func NewPolicyUsecase(repo PolicyRepo) *PolicyUsecase {
-	return &PolicyUsecase{
+func NewpolicyUsecase(repo PolicyRepo) *policyUsecase {
+	return &policyUsecase{
 		repo: repo,
 	}
 }
 
-func (uc *PolicyUsecase) CreatePolicy(ctx context.Context, policy *api.Policy) error {
+func (uc *policyUsecase) CreatePolicy(ctx context.Context, policy *api.Policy) (string,error) {
 	return uc.repo.Insert(ctx, policy)
 }
 
-func (uc *PolicyUsecase) UpdatePolicy(ctx context.Context, policy *api.Policy) error {
+func (uc *policyUsecase) UpdatePolicy(ctx context.Context, policy *api.Policy) error {
 	return nil
 }
 
-func (uc *PolicyUsecase) DeletePolicy(ctx context.Context, policy *api.Policy) error {
+func (uc *policyUsecase) DeletePolicy(ctx context.Context, policy *api.Policy) error {
 	return nil
 }
 
-func (uc *PolicyUsecase) GetPolicy(ctx context.Context, policy *api.Policy) error {
-	return nil
+func (uc *policyUsecase) GetPolicy(ctx context.Context,principal string,action string) ([]*api.Policy,error) {
+	return uc.repo.Select(ctx, principal, action)
 }
 
-func (uc *PolicyUsecase) ApplyPolicy(ctx context.Context, policy *api.Policy) error {
+func (uc *policyUsecase) ApplyPolicy(ctx context.Context, policy *api.Policy) error {
 	return nil
+}
+func (uc *policyUsecase) MatchResource(resourceRegx, target string) bool {
+	return uc.repo.MatchResource(resourceRegx, target)
 }

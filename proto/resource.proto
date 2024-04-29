@@ -5,7 +5,6 @@ option go_package = "github.com/begonia-org/go-access-control/api/v1";
 import "google/protobuf/descriptor.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/field_mask.proto";
-import "google/api/annotations.proto";
 
 // Resource is a resource that can be accessed by a user.
 // A resource is defined by ABAC (Attribute-Based Access Control) model.
@@ -22,7 +21,6 @@ message Resource {
 	string parent_id = 5;
 	// @gotags: doc:"resource owner" gorm:"column:owner;type:varchar(255);index;comment:资源拥有者"
 	string owner = 6;
-	// @gotags: doc:"完成时间" gorm:"column:completed_at;type:datetime;serializer:timepb;comment:定时任务的最近一次完成时间"
 
     google.protobuf.Timestamp created_at = 12;
     // @gotags: doc:"更新时间" gorm:"autoUpdateTime;column:updated_at;type:datetime;serializer:timepb;comment:定时任务的更新时间"
@@ -45,21 +43,22 @@ enum  ConditionOperator{
 	StringEqualsIgnoreCase = 3;
 	StringNotEqualsIgnoreCase = 4;
 	StringLike = 5;
-	NumericEquals = 6;
-	NumericNotEquals = 7;
-	NumericLessThan = 8;
-	NumericLessThanEquals = 9;
-	NumericGreaterThan = 10;
-	NumericGreaterThanEquals = 11;
-	BOOL = 12;
-	DateEquals = 13;
-	DateNotEquals = 14;
-	DateLessThan = 15;
-	DateLessThanEquals = 16;
-	DateGreaterThan = 17;
-	DateGreaterThanEquals = 18;
-	IpAddress=19;
-	NotIpAddress=20;
+	StringNotLike = 6;
+	NumericEquals = 7;
+	NumericNotEquals = 8;
+	NumericLessThan = 9;
+	NumericLessThanEquals = 10;
+	NumericGreaterThan = 11;
+	NumericGreaterThanEquals = 12;
+	BOOL = 13;
+	DateEquals = 14;
+	DateNotEquals = 15;
+	DateLessThan = 16;
+	DateLessThanEquals = 17;
+	DateGreaterThan = 18;
+	DateGreaterThanEquals = 19;
+	IpAddress=20;
+	NotIpAddress=21;
 }
 message ConditionKV{
 	string key = 1;
@@ -69,10 +68,12 @@ message Condition{
 	map<string,  ConditionKV> kv = 1;
 }
 message Policy {
-repeated string action = 1;
-repeated string resource = 2;
+repeated string actions = 1;
+ string resource = 2;
 Effect effect = 3;
 repeated Condition conditions = 4;
+string principal = 5;
+string unique_key = 6;
 }
 message AccessEnv {
 	string ip=1;
@@ -81,6 +82,14 @@ message AccessEnv {
 	string request_id=4[json_name="request_id"];
     google.protobuf.Timestamp created_at = 12[json_name="created_at"];
 }
+message FailReason {
+	// string code = 1;
+	string message = 1;
+	string key=2;
+    repeated string except=3;
+	string actual=4;
+	string operator=5;
+}
 message AccessContext {
 	// @gotags: doc:"principal id" gorm:"column:principal;type:varchar(255);index;comment:主体id"
 	string principal = 1;
@@ -88,6 +97,7 @@ message AccessContext {
 	string action = 3;
 	map<string, string> context = 4;
 	AccessEnv env = 5;
+	FailReason fail = 6;
 
 }
 
