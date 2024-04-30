@@ -55,12 +55,12 @@ func TestCheck(t *testing.T) {
                 Ip: "192.168.3.34",
             },
         }
-        ok, err := abac.Check(context.TODO(), access)
+        ok, err := abac.ApplyAuthorization(context.TODO(), access)
         c.So(ok, c.ShouldBeTrue)
         c.So(err, c.ShouldBeNil)
         access.Resource = []string{"begonia:file:/test3/2"}
         access.Fail = nil
-        _, err = abac.Check(context.TODO(), access)
+        _, err = abac.ApplyAuthorization(context.TODO(), access)
         c.So(err, c.ShouldNotBeNil)
         c.So(err.Error(),c.ShouldContainSubstring,"no resource match")
 

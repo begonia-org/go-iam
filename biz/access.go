@@ -27,7 +27,7 @@ func NewABAC(policy *policyUsecase, logger *logrus.Logger) *ABAC {
 	}
 }
 
-func (a *ABAC) Check(ctx context.Context, accessCtx *api.AccessContext) (bool, error) {
+func (a *ABAC) ApplyAuthorization(ctx context.Context, accessCtx *api.AccessContext) (bool, error) {
 	// get policy
 	policies, err := a.policy.GetPolicy(ctx, accessCtx.Principal, accessCtx.Action)
 	if err != nil {
