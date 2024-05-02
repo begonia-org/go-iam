@@ -6,7 +6,7 @@ import (
     "time"
 
     "github.com/agiledragon/gomonkey/v2"
-    api "github.com/begonia-org/go-iam/api/v1"
+    api "github.com/begonia-org/go-sdk/api/iam/v1"
     "github.com/gobwas/glob"
     c "github.com/smartystreets/goconvey/convey"
 )
@@ -37,12 +37,12 @@ func TestCheck(t *testing.T) {
                 },
             },
         }
-        patcher := gomonkey.ApplyFuncReturn((*policyUsecase).GetPolicy, policies, nil)
+        patcher := gomonkey.ApplyFuncReturn((*PolicyUsecase).GetPolicy, policies, nil)
         defer patcher.Reset()
         // snk, _ := tiga.NewSnowflake(1)
         // repo := data.NewPolicyRepoImpl(nil, snk)
-        abac := NewABAC(&policyUsecase{}, nil)
-        patcher.ApplyFunc((*policyUsecase).MatchResource, func(useCase *policyUsecase, resourceRegx, target string) bool {
+        abac := NewABAC(&PolicyUsecase{}, nil)
+        patcher.ApplyFunc((*PolicyUsecase).MatchResource, func(useCase *PolicyUsecase, resourceRegx, target string) bool {
             g := glob.MustCompile(resourceRegx)
             return g.Match(target)
         })

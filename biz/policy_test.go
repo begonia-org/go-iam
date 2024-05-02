@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	api "github.com/begonia-org/go-iam/api/v1"
+	api "github.com/begonia-org/go-sdk/api/iam/v1"
 	"github.com/begonia-org/go-iam/data"
 	c "github.com/smartystreets/goconvey/convey"
 	"github.com/spark-lence/tiga"

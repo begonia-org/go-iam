@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	api "github.com/begonia-org/go-iam/api/v1"
+	api "github.com/begonia-org/go-sdk/api/iam/v1"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spark-lence/tiga"
 	"go.mongodb.org/mongo-driver/bson"

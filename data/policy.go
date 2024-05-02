@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	api "github.com/begonia-org/go-iam/api/v1"
 	"github.com/begonia-org/go-iam/biz"
+	api "github.com/begonia-org/go-sdk/api/iam/v1"
 	"github.com/gobwas/glob"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spark-lence/tiga"
@@ -52,7 +52,31 @@ func (d *PolicyRepoImpl) Select(ctx context.Context, principal string, action st
 	}
 	return policies, nil
 }
-func (d *PolicyRepoImpl) Insert(ctx context.Context, policy *api.Policy) (string,error) {
+func (d *PolicyRepoImpl) Get(ctx context.Context, uniqueKey string) (*api.Policy, error) {
+	policiesMap, err := d.mongo.Find(ctx, "policy", bson.M{"unique_key": uniqueKey}, nil)
+	if err != nil {
+		return nil, fmt.Errorf("find policy error: %w", err)
+	}
+	if len(policiesMap) == 0 {
+		return nil, fmt.Errorf("no policy found")
+	}
+	return d.DecodePolicy(policiesMap[0], "json"), nil
+}
+func (d *PolicyRepoImpl) Update(ctx context.Context, policy *api.Policy, mask []string) error {
+	updateFields := bson.M{}
+	for _, field := range mask {
+		// 使用反射来获取 policy 中相应字段的值
+		fieldDesc := policy.ProtoReflect().Descriptor().Fields().ByJSONName(field)
+		// 将字段添加到更新文档中
+		updateFields[field] = policy.ProtoReflect().Get(fieldDesc).Interface()
+	}
+	if len(updateFields) == 0 {
+		return fmt.Errorf("no field to update")
+	}
+	// 构建更新语句，只更新指定的字段
+	return d.mongo.Upsert(ctx, "policy", bson.M{"unique_key": policy.UniqueKey}, bson.M{"$set": updateFields})
+}
+func (d *PolicyRepoImpl) Insert(ctx context.Context, policy *api.Policy) (string, error) {
 	policiesMap, err := d.mongo.Find(ctx, "policy", bson.M{"action": bson.M{"$in": policy.Actions}, "principal": policy.Principal}, nil)
 	if err != nil {
 		return "", fmt.Errorf("find policy error: %w", err)

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	api "github.com/begonia-org/go-iam/api/v1"
+	api "github.com/begonia-org/go-sdk/api/iam/v1"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/exp/slices"
 )
@@ -16,11 +16,11 @@ import (
 type AccessControl interface{}
 
 type ABAC struct {
-	policy *policyUsecase
+	policy *PolicyUsecase
 	log    *logrus.Logger
 }
 
-func NewABAC(policy *policyUsecase, logger *logrus.Logger) *ABAC {
+func NewABAC(policy *PolicyUsecase, logger *logrus.Logger) *ABAC {
 	return &ABAC{
 		policy: policy,
 		log:    logger,
